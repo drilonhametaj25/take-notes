@@ -1,4 +1,5 @@
 import TitleSeciton from "@/components/landing-page/title-section";
+import { Button } from "@/components/ui/button";
 import React from "react";
 
 const HomePage = () => {
@@ -14,7 +15,10 @@ const HomePage = () => {
                 md:justify-center
                 md:items-start
             '>
-                <TitleSeciton pill="Your workspace, Perfected" title='All-In-One Collaboration and Productivity Platform'></TitleSeciton>
+                <TitleSeciton pill="Your workspace, Perfected" title='All-In-One Collaboration and Productivity Platform'/>
+                <div className="bg-white p-[2px] mt-[6] reounded-xl bg-gradient-to-r from-primary to-brand-primaryBlue sm:w-[300px]">
+                    <Button></Button>
+                </div>
             </div>
         </section>
     )
