@@ -8,7 +8,7 @@ const HomePage = () => {
             <div className='overflow-hidden
                 px-4
                 sm:px-6
-                mt-10
+                mt-6
                 sm:flex
                 sm:flex-col
                 gap-4
@@ -16,8 +16,8 @@ const HomePage = () => {
                 md:items-start
             '>
                 <TitleSeciton pill="Your workspace, Perfected" title='All-In-One Collaboration and Productivity Platform'/>
-                <div className="bg-white p-[2px] mt-[6] reounded-xl bg-gradient-to-r from-primary to-brand-primaryBlue sm:w-[300px]">
-                    <Button></Button>
+                <div className="bg-white p-[2px] mt-[6] rounded-xl bg-gradient-to-r from-primary to-brand-primaryBlue sm:w-[300px]">
+                    <Button variant="btn-secondary" className="w-full rounded-[10px] p-6 text-2xl bg-background">Get It FREE</Button>
                 </div>
             </div>
         </section>

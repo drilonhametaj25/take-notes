@@ -16,6 +16,7 @@
     "migrate": "bun run src/lib/supabase/migration.ts"
   },
   "dependencies": {
+    "@radix-ui/themes": "^3.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dotenv": "^16.4.5",
