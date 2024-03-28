@@ -24,7 +24,7 @@ const TitleSeciton: React.FC<TitleSectionProps> = ({title, subheading, pill}) =>
                 dark:from-brand-primaryBlue
                 dark:to-brand-primaryPurple
             ">
-                <div className="rounder-full px-3 py-1 dark:bg-black">
+                <div className="rounded-full px-3 py-1 dark:bg-black">
                     {pill}
                 </div>
             </article>
