@@ -4,7 +4,11 @@ import Image from "next/image";
 import React from "react";
 import Banner from "../../../public/appBanner.png";
 import Cal from "../../../public/cal.png";
-import { CLIENTS } from "@/lib/constants";
+import { CLIENTS, USERS } from "@/lib/constants";
+import { randomUUID } from "crypto";
+import { twMerge } from "tailwind-merge";
+import clsx from "clsx";
+import CustomCard from "@/components/landing-page/custom-card";
 
 const HomePage = () => {
   return (
@@ -154,6 +158,41 @@ const HomePage = () => {
             personal and professional productivity needs."
             pill="Testimonials"
           />
+          {[...Array(2)].map((arr, index) => (
+            <div
+              key={randomUUID()}
+              className={twMerge(
+                clsx('mt-10 flex flex-nowrap gap-6 slef-start', {
+                  'flex-row-reverse': index ===1,
+                  'animate-[slide_250s_linear_infinite]': true,
+                  'animate-[slide_250s_linear_infinite_reverse]': index === 1,
+                  'ml-[100vw]' : index === 1
+                }),
+                'hover:paused'
+              )}
+            >
+              {USERS.map((testimonial, index) => (
+                <CustomCard
+                  key={testimonial.name}
+                  className="w-[500px]
+                  shrink-0s
+                  rounded-xl
+                  dark:bg-gradient-to-t
+                  dark:from-border
+                  dark:to-background
+                  "
+                  cardHeader={
+                    <div></div>
+                  }
+                >
+
+                </CustomCard>
+              ))
+
+              }
+
+            </div>
+          ))}
         </div>
       </section>
     </>
