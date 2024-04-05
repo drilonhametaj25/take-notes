@@ -23,22 +23,22 @@ const HomePage = () => {
             sm:flex-col
             gap-4
             md:justify-center
-            justify-center
+            md:items-center
                 "
       >
         <TitleSection
           pill="✨ Your workspace, Perfected"
           title="All-In-One Collaboration and Productivity Platform"
         />
-        <div className="bg-white p-[2px] mt-[6] rounded-xl bg-gradient-to-r from-primary to-brand-primaryBlue sm:w-[300px] justify-center">
+        <div className="bg-white p-[2px] mt-[6] rounded-xl bg-gradient-to-r from-primary to-brand-primaryBlue sm:w-[300px]">
           <Button
-            variant="btn-secondary"
+            variant="destructive"
             className="w-full rounded-[10px] p-6 text-2xl bg-background"
           >
             Get It FREE
           </Button>
         </div>
-        <div className="md:mt-[-90px] sm:w-full w-[750px] justify-center items-center mt-[-40px] sm:ml-0 ml-[-50px]">
+        <div className="flex md:mt-[-90px] sm:w-full justify-center items-center mt-[-40px] sm:ml-0 ml-[-50px]">
           <Image src={Banner} alt="Application Banner" />
           <div
             className="
@@ -163,13 +163,13 @@ const HomePage = () => {
             <div
               key={randomUUID()}
               className={twMerge(
-                clsx('mt-10 flex flex-nowrap gap-6 slef-start', {
-                  'flex-row-reverse': index ===1,
-                  'animate-[slide_250s_linear_infinite]': true,
-                  'animate-[slide_250s_linear_infinite_reverse]': index === 1,
-                  'ml-[100vw]' : index === 1
+                clsx("mt-10 flex flex-nowrap gap-6 slef-start", {
+                  "flex-row-reverse": index === 1,
+                  "animate-[slide_250s_linear_infinite]": true,
+                  "animate-[slide_250s_linear_infinite_reverse]": index === 1,
+                  "ml-[100vw]": index === 1,
                 }),
-                'hover:paused'
+                "hover:paused"
               )}
             >
               {USERS.map((testimonial, index) => (
@@ -183,25 +183,16 @@ const HomePage = () => {
                   dark:to-background
                   "
                   cardHeader={
-                    <div
-                      className="flex items-center gap-4"
-                    >
+                    <div className="flex items-center gap-4">
                       <Avatar>
-                        <AvatarImage src={`/avatars/${index+1}.png`}/>
+                        <AvatarImage src={`/avatars/${index + 1}.png`} />
                         <AvatarFallback>AV</AvatarFallback>
                       </Avatar>
-                      <div>
-                        
-                      </div>
+                      <div></div>
                     </div>
                   }
-                >
-
-                </CustomCard>
-              ))
-
-              }
-
+                ></CustomCard>
+              ))}
             </div>
           ))}
         </div>
