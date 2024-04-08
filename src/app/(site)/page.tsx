@@ -190,8 +190,12 @@ const HomePage = () => {
                         <AvatarFallback>AV</AvatarFallback>
                       </Avatar>
                       <div>
-                        <CardTitle className="text-foreground">{testimonial.name}</CardTitle>
-                        <CardDescription className="dark:text-washed-purple-800">{testimonial.name.toLocaleLowerCase()}</CardDescription>
+                        <CardTitle className="text-foreground">
+                          {testimonial.name}
+                        </CardTitle>
+                        <CardDescription className="dark:text-washed-purple-800">
+                          {testimonial.name.toLocaleLowerCase()}
+                        </CardDescription>
                       </div>
                     </div>
                   }
@@ -205,6 +209,13 @@ const HomePage = () => {
             </div>
           ))}
         </div>
+      </section>
+      <section className="mt-20 px-4 sm:px-6">
+        <TitleSection
+          title="The Perfect Plan For You"
+          subheading="Experience all the benefits of our platform. Select a plan that suits your needs and take your productivity to new heights."
+          pill="Pricing"
+        />
       </section>
     </>
   );
