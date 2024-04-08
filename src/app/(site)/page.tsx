@@ -4,7 +4,8 @@ import Image from "next/image";
 import React from "react";
 import Banner from "../../../public/appBanner.png";
 import Cal from "../../../public/cal.png";
-import { CLIENTS, USERS } from "@/lib/constants";
+import Diamond from "../../../public/icons/diamond.svg"
+import { CLIENTS, PRICING_CARDS, PRICING_PLANS, USERS } from "@/lib/constants";
 import { randomUUID } from "crypto";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
@@ -216,6 +217,51 @@ const HomePage = () => {
           subheading="Experience all the benefits of our platform. Select a plan that suits your needs and take your productivity to new heights."
           pill="Pricing"
         />
+        <div className="flex
+          flex-col-reverse
+          sm:flex-row
+          gap-4
+          justify-center
+          sm:items-stretch
+          items-center
+          mt-10
+        ">
+          {PRICING_CARDS.map((card) => (
+            <CustomCard 
+            key={card.planType}
+            className={clsx('w-[300px] rounded-2xl dark:bg-black/95 background-blur-3xl relative', 
+            {
+              'border-brand-primaryPurple/70':
+                card.planType === PRICING_PLANS.proplan,
+            })}
+            cardHeader={
+              <CardTitle
+              className="text-2xl font-semibold"
+              >
+                {card.planType===PRICING_PLANS.proplan && (
+                  <>
+                  <div 
+                    className="hidden dark:block w-full blur-[120px] rounded-full h-32
+                    absolute
+                    bg-brand-primaryPurple/80
+                    -z-10
+                    top-0"
+                  />
+                  <Image 
+                  src={Diamond}
+                  alt="Pro Plan Icon"
+                  className="absolute top-6 right-6"
+                  />
+                  </>
+                )}
+                {card.planType}
+              </CardTitle>
+            }
+            >
+              
+            </CustomCard>
+          ))}
+        </div>
       </section>
     </>
   );
