@@ -12,7 +12,7 @@ import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import CustomCard from "@/components/landing-page/custom-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CardDescription, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 
 const HomePage = () => {
   return (
@@ -230,7 +230,7 @@ const HomePage = () => {
           {PRICING_CARDS.map((card) => (
             <CustomCard 
             key={card.planType}
-            className={clsx('w-[300px] rounded-2xl dark:bg-black/95 background-blur-3xl relative', 
+            className={clsx('w-[400px] rounded-2xl dark:bg-black/95 background-blur-3xl relative', 
             {
               'border-brand-primaryPurple/70':
                 card.planType === PRICING_PLANS.proplan,
@@ -257,6 +257,13 @@ const HomePage = () => {
                 )}
                 {card.planType}
               </CardTitle>
+            }
+            cardContent={
+              <CardContent className="p-0">
+                <span className="font-normal text-2xl">${card.price}</span>
+                {+card.price > 0 ? <span className="dark:text-washed-purple-800 ml-1"> /mo</span>: ''}
+                <p className="dark:text-washed-purple-800">{card.description}</p>
+              </CardContent>
             }
             cardFooter = {
               <ul className="font-normale flex mb:2 flex-col gap-4">
