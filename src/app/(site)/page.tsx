@@ -230,7 +230,7 @@ const HomePage = () => {
           {PRICING_CARDS.map((card) => (
             <CustomCard 
             key={card.planType}
-            className={clsx('w-[400px] rounded-2xl dark:bg-black/95 background-blur-3xl relative', 
+            className={clsx('w-[400px] rounded-2xl dark:bg-black/40 background-blur-3xl relative', 
             {
               'border-brand-primaryPurple/70':
                 card.planType === PRICING_PLANS.proplan,
