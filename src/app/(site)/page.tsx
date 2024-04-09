@@ -5,6 +5,7 @@ import React from "react";
 import Banner from "../../../public/appBanner.png";
 import Cal from "../../../public/cal.png";
 import Diamond from "../../../public/icons/diamond.svg"
+import Check from "../../../public/icons/check.svg"
 import { CLIENTS, PRICING_CARDS, PRICING_PLANS, USERS } from "@/lib/constants";
 import { randomUUID } from "crypto";
 import { twMerge } from "tailwind-merge";
@@ -256,6 +257,20 @@ const HomePage = () => {
                 )}
                 {card.planType}
               </CardTitle>
+            }
+            cardFooter = {
+              <ul className="font-normale flex mb:2 flex-col gap-4">
+                <small>{card.highlightFeature}</small>
+                {card.freatures.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-center gap-2"
+                  >
+                    <Image src={Check} alt='Check Icon'/>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             }
             >
               
