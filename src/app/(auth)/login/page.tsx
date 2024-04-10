@@ -48,3 +48,5 @@ const LoginPage = () => {
         </form>
     </Form>
 }
+
+export default LoginPage
