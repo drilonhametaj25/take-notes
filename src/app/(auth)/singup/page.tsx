@@ -1,3 +1,5 @@
+'use client';
+import clsx from "clsx";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import { z } from "zod";
@@ -30,7 +32,11 @@ const SignUp = () => {
     return searchParams.get('error_description')
   }, [searchParams]);
 
-  const confirmationAndErrorStyles = useMemo(() => {}, [])
+  const confirmationAndErrorStyles = useMemo(() => clsx('bg-primary', {
+    "bg-red-500/10": constExchangeError,
+    "border-red-500/50": constExchangeError,
+    "text-red-700": constExchangeError,
+  }), [])
 
   return <></>;
 };
