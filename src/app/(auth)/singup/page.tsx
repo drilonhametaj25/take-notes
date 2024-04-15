@@ -6,7 +6,7 @@ const signUpFormSchema = z.object({
     password: z.string().describe('Password').min(6, 'Password must be minimum 6 characters'),
     confirmPassword: z.string().describe('Confirm Password').min(6, 'Password must be minimum 6 characters')
     
-})
+}).refine((data) => data.password === data.confirmPassword, {message: "Password don't match!", path: ['confirmPassword']} )
 
 const SignUp = () => {
     return <></>
