@@ -1,7 +1,9 @@
 'use client';
+import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const signUpFormSchema = z
@@ -37,6 +39,14 @@ const SignUp = () => {
     "border-red-500/50": constExchangeError,
     "text-red-700": constExchangeError,
   }), [])
+
+  const form = useForm<z.infer<typeof signUpFormSchema>>({
+    mode: 'onChange',
+    resolver: zodResolver(signUpFormSchema),
+    defaultValues: {email: '', password: '', confirmPassword: ''}
+  })
+
+  
 
   return <></>;
 };
