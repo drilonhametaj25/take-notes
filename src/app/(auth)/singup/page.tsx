@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MailCheck } from "lucide-react";
+import { FormSchema } from "@/lib/types";
 
 const signUpFormSchema = z
   .object({
@@ -55,7 +56,9 @@ const SignUp = () => {
     defaultValues: {email: '', password: '', confirmPassword: ''}
   })
   const isLoading = form.formState.isSubmitting;
-  const onSubmit = () => {}
+  const onSubmit = async ({email, password}: z.infer<typeof FormSchema>) => {
+    
+  }
 
   const singUpHandler = () => {}
  

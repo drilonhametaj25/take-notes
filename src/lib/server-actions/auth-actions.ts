@@ -17,3 +17,7 @@ export async function actionLoginUser({
     return response;
   }
   
+export async function actionSignUpUser({email,password}: z.infer<typeof FormSchema>){
+  const supabase = createRouteHandlerClient({ cookies });
+
+}
