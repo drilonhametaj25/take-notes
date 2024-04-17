@@ -12,6 +12,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { MailCheck } from "lucide-react";
 
 const signUpFormSchema = z
   .object({
@@ -150,6 +152,12 @@ const SignUp = () => {
             Login
           </Link>
         </span>
+        {(confirmation || constExchangeError) && <>
+          <Alert className={confirmationAndErrorStyles}>
+            {!constExchangeError && <MailCheck className="h4 w-4" />}
+            <AlertTitle>{constExchangeError ? "Invalid Link" : "Check your email!"}</AlertTitle>
+          </Alert>
+        </>}
     </form>
   </Form>;
 };
