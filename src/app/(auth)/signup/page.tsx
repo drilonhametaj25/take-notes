@@ -15,6 +15,7 @@ import { z } from "zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MailCheck } from "lucide-react";
 import { FormSchema } from "@/lib/types";
+import { actionSignUpUser } from "@/lib/server-actions/auth-actions";
 
 const signUpFormSchema = z
   .object({
@@ -44,7 +45,7 @@ const SignUp = () => {
     return searchParams.get('error_description')
   }, [searchParams]);
 
-  const confirmationAndErrorStyles = useMemo(() => clsx('bg-primary', {
+  const confirmationAndErrorStyles = useMemo(() => clsx('variant', {
     "bg-red-500/10": constExchangeError,
     "border-red-500/50": constExchangeError,
     "text-red-700": constExchangeError,
@@ -57,10 +58,14 @@ const SignUp = () => {
   })
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async ({email, password}: z.infer<typeof FormSchema>) => {
-    
+    const {error} = await actionSignUpUser({email, password})
+    if(error){
+      setSubmitError(error.message)
+      form.reset()
+      return
+    }
+    setConfirmation(true)
   }
-
-  const singUpHandler = () => {}
  
   return <Form {...form}>
     <form onChange={() => {if(submitError) setSubmitError('')}}
