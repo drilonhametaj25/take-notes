@@ -13,6 +13,9 @@ const DashboardPage = async () => {
     if(!user) return;
     const workspace = await db.query.workspaces.findFirst({where: (workspace, {eq}) => eq(workspace.workspaceOwner, user.id)})
     const { data: subscription, error: subsctiptionError} = await getUserSubscriptionStatus(user.id)
+    
+    if(subsctiptionError) return;
+
     if(!workspace) {
         return (
             <div className="bg-background h-screen w-screen flex justify-center items-center">
