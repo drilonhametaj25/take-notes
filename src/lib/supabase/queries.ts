@@ -1,40 +1,38 @@
-import { eq, ilike } from "drizzle-orm";
-import db from "./db";
-import { workspaces } from "./schema";
-import { Folder, Subscription, User, workspace } from "./supabase.types";
-import { files, folders, users } from "../../../migrations/schema";
-import { validate } from "uuid";
+'use server';
+import { validate } from 'uuid';
+import { files, folders, users, workspaces } from '../../../migrations/schema';
+import db from './db';
+import { File, Folder, Subscription, User, workspace } from './supabase.types';
+import { and, eq, ilike, notExists } from 'drizzle-orm';
+
+import { revalidatePath } from 'next/cache';
+
+export const createWorkspace = async (workspace: workspace) => {
+  try {
+    const response = await db.insert(workspaces).values(workspace);
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: 'Error' };
+  }
+};
+
+export const deleteWorkspace = async (workspaceId: string) => {
+  if (!workspaceId) return;
+  await db.delete(workspaces).where(eq(workspaces.id, workspaceId));
+};
 
 export const getUserSubscriptionStatus = async (userId: string) => {
   try {
     const data = await db.query.subscriptions.findFirst({
       where: (s, { eq }) => eq(s.userId, userId),
     });
-
-    if (data) {
-      return { data: data as Subscription, error: null };
-    } else {
-        return { data: null, error: "Error" };
-    }
+    if (data) return { data: data as Subscription, error: null };
+    else return { data: null, error: null };
   } catch (error) {
-    console.error(error);
-    return { data: null, error: "Error" };
+    console.log(error);
+    return { data: null, error: `Error` };
   }
-};
-
-export const createWorkspace = async (workspace: workspace) => {
-  try {
-    const response = await db.insert(workspaces).values(workspace)
-    return {data: null, error: null}
-  } catch (error) {
-    console.error(error)
-    return {data: null, error: 'Error'}
-  }
-}
-
-export const deleteWorkspace = async (workspaceId: string) => {
-  if (!workspaceId) return;
-  await db.delete(workspaces).where(eq(workspaces.id, workspaceId));
 };
 
 export const getFolders = async (workspaceId: string) => {
@@ -78,24 +76,24 @@ export const getWorkspaceDetails = async (workspaceId: string) => {
   }
 };
 
-// export const getFileDetails = async (fileId: string) => {
-//   const isValid = validate(fileId);
-//   if (!isValid) {
-//     data: [];
-//     error: 'Error';
-//   }
-//   try {
-//     const response = (await db
-//       .select()
-//       .from(files)
-//       .where(eq(files.id, fileId))
-//       .limit(1)) as File[];
-//     return { data: response, error: null };
-//   } catch (error) {
-//     console.log('🔴Error', error);
-//     return { data: [], error: 'Error' };
-//   }
-// };
+export const getFileDetails = async (fileId: string) => {
+  const isValid = validate(fileId);
+  if (!isValid) {
+    data: [];
+    error: 'Error';
+  }
+  try {
+    const response = (await db
+      .select()
+      .from(files)
+      .where(eq(files.id, fileId))
+      .limit(1)) as File[];
+    return { data: response, error: null };
+  } catch (error) {
+    console.log('🔴Error', error);
+    return { data: [], error: 'Error' };
+  }
+};
 
 export const deleteFile = async (fileId: string) => {
   if (!fileId) return;
@@ -127,76 +125,63 @@ export const getFolderDetails = async (folderId: string) => {
   }
 };
 
-// export const getPrivateWorkspaces = async (userId: string) => {
-//   if (!userId) return [];
-//   const privateWorkspaces = (await db
-//     .select({
-//       id: workspaces.id,
-//       createdAt: workspaces.createdAt,
-//       workspaceOwner: workspaces.workspaceOwner,
-//       title: workspaces.title,
-//       iconId: workspaces.iconId,
-//       data: workspaces.data,
-//       inTrash: workspaces.inTrash,
-//       logo: workspaces.logo,
-//       bannerUrl: workspaces.bannerUrl,
-//     })
-//     .from(workspaces)
-//     .where(
-//       and(
-//         notExists(
-//           db
-//             .select()
-//             .from(collaborators)
-//             .where(eq(collaborators.workspaceId, workspaces.id))
-//         ),
-//         eq(workspaces.workspaceOwner, userId)
-//       )
-//     )) as workspace[];
-//   return privateWorkspaces;
-// };
+export const getPrivateWorkspaces = async (userId: string) => {
+  if (!userId) return [];
+  const privateWorkspaces = (await db
+    .select({
+      id: workspaces.id,
+      createdAt: workspaces.createdAt,
+      workspaceOwner: workspaces.workspaceOwner,
+      title: workspaces.title,
+      iconId: workspaces.iconId,
+      data: workspaces.data,
+      inTrash: workspaces.inTrash,
+      logo: workspaces.logo,
+      bannerUrl: workspaces.bannerUrl,
+    })
+    .from(workspaces)
+    ) as workspace[];
+  return privateWorkspaces;
+};
 
-// export const getCollaboratingWorkspaces = async (userId: string) => {
-//   if (!userId) return [];
-//   const collaboratedWorkspaces = (await db
-//     .select({
-//       id: workspaces.id,
-//       createdAt: workspaces.createdAt,
-//       workspaceOwner: workspaces.workspaceOwner,
-//       title: workspaces.title,
-//       iconId: workspaces.iconId,
-//       data: workspaces.data,
-//       inTrash: workspaces.inTrash,
-//       logo: workspaces.logo,
-//       bannerUrl: workspaces.bannerUrl,
-//     })
-//     .from(users)
-//     .innerJoin(collaborators, eq(users.id, collaborators.userId))
-//     .innerJoin(workspaces, eq(collaborators.workspaceId, workspaces.id))
-//     .where(eq(users.id, userId))) as workspace[];
-//   return collaboratedWorkspaces;
-// };
+export const getCollaboratingWorkspaces = async (userId: string) => {
+  if (!userId) return [];
+  const collaboratedWorkspaces = (await db
+    .select({
+      id: workspaces.id,
+      createdAt: workspaces.createdAt,
+      workspaceOwner: workspaces.workspaceOwner,
+      title: workspaces.title,
+      iconId: workspaces.iconId,
+      data: workspaces.data,
+      inTrash: workspaces.inTrash,
+      logo: workspaces.logo,
+      bannerUrl: workspaces.bannerUrl,
+    })
+    .from(users)
+    .where(eq(users.id, userId))) as workspace[];
+  return collaboratedWorkspaces;
+};
 
-// export const getSharedWorkspaces = async (userId: string) => {
-//   if (!userId) return [];
-//   const sharedWorkspaces = (await db
-//     .selectDistinct({
-//       id: workspaces.id,
-//       createdAt: workspaces.createdAt,
-//       workspaceOwner: workspaces.workspaceOwner,
-//       title: workspaces.title,
-//       iconId: workspaces.iconId,
-//       data: workspaces.data,
-//       inTrash: workspaces.inTrash,
-//       logo: workspaces.logo,
-//       bannerUrl: workspaces.bannerUrl,
-//     })
-//     .from(workspaces)
-//     .orderBy(workspaces.createdAt)
-//     .innerJoin(collaborators, eq(workspaces.id, collaborators.workspaceId))
-//     .where(eq(workspaces.workspaceOwner, userId))) as workspace[];
-//   return sharedWorkspaces;
-// };
+export const getSharedWorkspaces = async (userId: string) => {
+  if (!userId) return [];
+  const sharedWorkspaces = (await db
+    .selectDistinct({
+      id: workspaces.id,
+      createdAt: workspaces.createdAt,
+      workspaceOwner: workspaces.workspaceOwner,
+      title: workspaces.title,
+      iconId: workspaces.iconId,
+      data: workspaces.data,
+      inTrash: workspaces.inTrash,
+      logo: workspaces.logo,
+      bannerUrl: workspaces.bannerUrl,
+    })
+    .from(workspaces)
+    .orderBy(workspaces.createdAt)
+    .where(eq(workspaces.workspaceOwner, userId))) as workspace[];
+  return sharedWorkspaces;
+};
 
 export const getFiles = async (folderId: string) => {
   const isValid = validate(folderId);
@@ -217,7 +202,7 @@ export const getFiles = async (folderId: string) => {
 // export const addCollaborators = async (users: User[], workspaceId: string) => {
 //   const response = users.forEach(async (user: User) => {
 //     const userExists = await db.query.collaborators.findFirst({
-//       where: (u, { eq }) =>
+//       where: (u: { userId: any; workspaceId: any; }, { eq }: any) =>
 //         and(eq(u.userId, user.id), eq(u.workspaceId, workspaceId)),
 //     });
 //     if (!userExists)
@@ -231,7 +216,7 @@ export const getFiles = async (folderId: string) => {
 // ) => {
 //   const response = users.forEach(async (user: User) => {
 //     const userExists = await db.query.collaborators.findFirst({
-//       where: (u, { eq }) =>
+//       where: (u: { userId: any; workspaceId: any; }, { eq }: any) =>
 //         and(eq(u.userId, user.id), eq(u.workspaceId, workspaceId)),
 //     });
 //     if (userExists)
@@ -253,24 +238,24 @@ export const findUser = async (userId: string) => {
   return response;
 };
 
-// export const getActiveProductsWithPrice = async () => {
-//   try {
-//     const res = await db.query.products.findMany({
-//       where: (pro, { eq }) => eq(pro.active, true),
+export const getActiveProductsWithPrice = async () => {
+  try {
+    const res = await db.query.products.findMany({
+      where: (pro, { eq }) => eq(pro.active, true),
 
-//       with: {
-//         prices: {
-//           where: (pri, { eq }) => eq(pri.active, true),
-//         },
-//       },
-//     });
-//     if (res.length) return { data: res, error: null };
-//     return { data: [], error: null };
-//   } catch (error) {
-//     console.log(error);
-//     return { data: [], error };
-//   }
-// };
+      with: {
+        prices: {
+          where: (pri: { active: any; }, { eq }: any) => eq(pri.active, true),
+        },
+      },
+    });
+    if (res.length) return { data: res, error: null };
+    return { data: [], error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: [], error };
+  }
+};
 
 export const createFolder = async (folder: Folder) => {
   try {
@@ -282,15 +267,15 @@ export const createFolder = async (folder: Folder) => {
   }
 };
 
-// export const createFile = async (file: File) => {
-//   try {
-//     await db.insert(files).values(file);
-//     return { data: null, error: null };
-//   } catch (error) {
-//     console.log(error);
-//     return { data: null, error: 'Error' };
-//   }
-// };
+export const createFile = async (file: File) => {
+  try {
+    await db.insert(files).values(file);
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: 'Error' };
+  }
+};
 
 export const updateFolder = async (
   folder: Partial<Folder>,
@@ -305,18 +290,18 @@ export const updateFolder = async (
   }
 };
 
-// export const updateFile = async (file: Partial<File>, fileId: string) => {
-//   try {
-//     const response = await db
-//       .update(files)
-//       .set(file)
-//       .where(eq(files.id, fileId));
-//     return { data: null, error: null };
-//   } catch (error) {
-//     console.log(error);
-//     return { data: null, error: 'Error' };
-//   }
-// };
+export const updateFile = async (file: Partial<File>, fileId: string) => {
+  try {
+    const response = await db
+      .update(files)
+      .set(file)
+      .where(eq(files.id, fileId));
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: 'Error' };
+  }
+};
 
 export const updateWorkspace = async (
   workspace: Partial<workspace>,
